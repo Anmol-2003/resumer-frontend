@@ -1,10 +1,13 @@
 import React from 'react'
 import assets from '../../assets/assets'
 import { useNavigate } from 'react-router-dom' 
+import { useSelector } from 'react-redux'
 
 const TemplateSelection = () => {
     const navigate = useNavigate();
-  return (
+    const userId = useSelector(state => state.userId); 
+    console.log(userId)
+  return userId ? (
     <div className='h-screen'>
         <p className='text-[24px] py-5 text-center'>Choose a template of your choice</p>
         <div className='flex justify-evenly p-10 gap-10'>
@@ -30,6 +33,10 @@ const TemplateSelection = () => {
                 <p className='text-[20px] text-center font-bold'>Template 3</p>
             </div>
         </div>
+    </div>
+  ) : (
+    <div>
+        <h1 className='font-bold text-[40px] text-center'>Login or create an account first mate</h1>
     </div>
   )
 }

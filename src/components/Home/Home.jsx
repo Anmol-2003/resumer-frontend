@@ -1,44 +1,105 @@
-import React from 'react'
+import React, { useEffect } from 'react'
 import { useNavigate } from 'react-router-dom'
 import assets from '../../assets/assets'
+import { useDispatch } from 'react-redux'
+import { updateUserId } from '../../store-slices/user-details/user-details'
+
 
 const Home = () => {
   const navigate = useNavigate();
+  const dispatch = useDispatch();
+
+  // Authenticate access_token
+  useEffect( ()=>{
+    const access_token = sessionStorage.getItem('access_token');
+    const fetchUserData = async () => {
+      try{
+        const response = await fetch(
+          'http://127.0.0.1:3000/auth/me', {
+            method : ['GET'], 
+            headers : {
+              'Authorization' : `Bearer ${access_token}`, 
+              'Content-Type' : 'application/json'
+            }
+          }
+        ); 
+        if(response.ok){
+          const responseBody = await response.json(); // response is a promise type object
+          if(responseBody.status_code === 500){
+            console.log('Token has expired.'); 
+            navigate('/login')
+          }
+          // storing the userId data in the global state
+          dispatch(updateUserId(responseBody.data));
+          console.log('successfully authenticated token')
+        }else {
+          console.log('Some error occured');
+          // navigate('/login');
+        }
+      } catch (error) {
+        console.log(error);
+      }
+    }
+    fetchUserData();
+  }, []);
+  
   return (
-    <div className='h-screen flex items-center bg-white'>
-      <div className='flex ml-36'>
-        <div className='w-[400px] mt-2.5'>
-          <div className='text-4xl font-bold mb-5'>Resumer.</div>
-          <div className='text-xl mb-7'>
-            <p>Your smart resume manager that tailors your professional story to match any job description, generating ATS-optimized resumes in sleek, customizable templates with ease.</p>
-          </div>
-          <div className=''>
-            <ul className="flex flex-col space-y-5">
-              <li>
-                <button 
-                  onClick={() => navigate('/login')}
-                  className='w-[300px] h-10 bg-[#5f27c7] text-white font-bold text-lg rounded-full hover:shadow-lg'
-                >
-                  Login
-                </button>
-              </li>
-              <li>
-                <button 
-                  onClick={() => navigate('/signup')}
-                  className='w-[300px] h-10 bg-[#5f27c7] text-white font-bold text-lg rounded-full hover:shadow-lg'
-                >
-                  Sign up
-                </button>
-              </li>
-            </ul>
-          </div>
+    <div className=''>
+      <div className='flex gap-10 m-20'>
+        <div>
+          <img className= 'h-[450px]' src={assets.homepage_img} alt="" />
         </div>
-        <div className=''>
-          <img src={assets.resumer_homepage} alt="" className='w-[550px]' />
+        <div>
+        <h1 className='font-bold text-[34px] text-center ml-20'>The best resumer builder AI <br />out there.</h1>
+        <p className='ml-10 mt-10 text-[18px]'><span className='text-[24px] font-bold'>63%</span> of recruiters like to get resumes personalized to the job position. </p>
+        <p className='ml-10 mt-2 text-[18px]'><span className='text-[24px] font-bold'>83%</span> of recruiters say they're more likely to hire a candidate who has a well-formatted resume. </p>
+        <p className='ml-10 mt-2 text-[18px]'><span className='text-[24px] font-bold'>60%</span> of hiring managers say they've found a typo on a resume. </p>
+        <div className='flex justify-center mt-20'>  {/* Added flex and justify-center */}
+          <button className='h-[40px] w-[300px] bg-[#5f27c7] text-white rounded-3xl hover:shadow-lg font-bold text-[18px]' onClick={()=>navigate('/login')}>Get Started</button>
         </div>
+        </div>   
       </div>
     </div>
   )
+  // return userId ? (
+  //   <div>
+
+  //   </div>
+  // ) : (
+  //   <div className='h-screen flex items-center bg-white'>
+  //     <div className='flex ml-36'>
+  //       <div className='w-[400px] mt-2.5'>
+  //         <div className='text-4xl font-bold mb-5'>Resumer.</div>
+  //         <div className='text-xl mb-7'>
+  //           <p>Your smart resume manager that tailors your professional story to match any job description, generating ATS-optimized resumes in sleek, customizable templates with ease.</p>
+  //         </div>
+  //         <div className=''>
+  //           <ul className="flex flex-col space-y-5">
+  //             <li>
+  //               <button 
+  //                 onClick={() => navigate('/login')}
+  //                 className='w-[300px] h-10 bg-[#5f27c7] text-white font-bold text-lg rounded-full hover:shadow-lg'
+  //               >
+  //                 Login
+  //               </button>
+  //             </li>
+  //             <li>
+  //               <button 
+  //                 onClick={() => navigate('/signup')}
+  //                 className='w-[300px] h-10 bg-[#5f27c7] text-white font-bold text-lg rounded-full hover:shadow-lg'
+  //               >
+  //                 Sign up
+  //               </button>
+  //             </li>
+  //           </ul>
+  //         </div>
+  //       </div>
+  //       <div className=''>
+  //         <img src={assets.resumer_homepage} alt="" className='w-[550px]' />
+  //       </div>
+  //     </div>
+  //   </div>
+  // )
 }
 
 export default Home;

@@ -1,12 +1,17 @@
 import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import assets from '../../assets/assets';
+import { useDispatch } from 'react-redux';
+import { updateUserId } from '../../store-slices/user-details/user-details';
+
 
 const Signup = () => {
+  
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [username, setUsername] = useState('');
   const navigate = useNavigate();
+  const dispatch = useDispatch();
 
   const signupHandler = async () => {
     if (!username || !email || !password) {
@@ -14,28 +19,30 @@ const Signup = () => {
       return;
     }
     const data = {
-      username,
-      email,
-      password
+      'name':username,
+      'email' : email,
+      'password' : password
     };
 
     try {
-      const response = await fetch('http://127.0.0.1:3000/signup', {
+      const response = await fetch('http://127.0.0.1:3000/auth/signup', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
         },
-        body: JSON.stringify(data)
+        body: JSON.stringify(data), 
       });
-      let result = await response.json();
+      let responseBody = await response.json();
 
       if (response.ok) {
-        alert('Sign up successful');
+        dispatch(updateUserId(responseBody.data));
+        sessionStorage.setItem('access_token', responseBody.token);
+        navigate('/template-selection');
+        // console.log(responseBody);
+        // alert('Sign up successful');
       } else {
-        alert(response.status);
-        return;
+        console.log(responseBody);
       }
-
     } catch (error) {
       alert(error);
     }

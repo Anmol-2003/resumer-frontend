@@ -1,12 +1,15 @@
 import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import assets from '../../assets/assets';
+import { useDispatch } from 'react-redux';
+import { updateUserId } from '../../store-slices/user-details/user-details';
 
 const Login = () => {
     const [email, setEmail] = useState('');
     const [password, setPassword] = useState('');
     const navigate = useNavigate();
-    
+    const dispatch = useDispatch();
+
     const loginHandler = async () => {
         if (!email || !password) {
             alert('Please enter your details');
@@ -14,18 +17,21 @@ const Login = () => {
         }
         const data = { email, password };
         try {
-            const response = await fetch('http://127.0.0.1:3000/login', {
+            const response = await fetch('http://127.0.0.1:3000/auth/login', {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json',
                 },
                 body: JSON.stringify(data),
             });
-            const result = await response.json();
+            const responseBody = await response.json();
             if (response.ok) {
-                console.log('Successful login');
+                dispatch(updateUserId(responseBody.data));
+                sessionStorage.setItem('access_token', responseBody.token);
+                navigate('/template-selection');
+                // console.log('Successful login');
             } else {
-                alert('Login failed');
+                alert('Login unsuccessful');
             }
         } catch (error) {
             console.error('Error', error);

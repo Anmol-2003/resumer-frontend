@@ -5,6 +5,9 @@ import password from './password.svg'
 import template1 from './template_1.png'
 import template2 from './template_2.png'
 import template3 from './template_3.png'
+import homepage_img from './resume.webp'
+import resumer from './resumer.jpg'
+import edit from './edit.svg'
 
 export default {
     resumer_homepage, 
@@ -13,5 +16,8 @@ export default {
     user, 
     template1, 
     template2, 
-    template3
+    template3, 
+    homepage_img, 
+    resumer, 
+    edit
 }

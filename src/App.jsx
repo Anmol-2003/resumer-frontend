@@ -5,6 +5,8 @@ import NavBar from "./components/NavBar/NavBar"
 import { Route, Routes } from 'react-router-dom'
 import TemplateSelection from "./components/Generate/TemplateSelection"
 import Dashboard from "./components/Generate/Dashboard"
+import UserDetails from "./components/Details/userDetails"
+
 
 function App() {
 
@@ -15,6 +17,7 @@ function App() {
         <Route path='/' element = {<Home/>} />
         <Route path='/login' element = {<Login/>} />
         <Route path='/signup' element = {<Signup/>} />
+        <Route path="/user-details" element = {<UserDetails/>}/>
         <Route path='/template-selection' element = {<TemplateSelection/>} />
         {/* To pass information or state between pages using router. Have to define the parameters in the Route definition for dynamic passing */}
         <Route path='/dashboard/:template' element = {<Dashboard/>} />

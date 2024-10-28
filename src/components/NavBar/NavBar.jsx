@@ -16,13 +16,16 @@ const NavBar = () => {
                             setPage('home'); 
                             navigate('/')
                         }}
-                        className={page === "home" ? "text-gray-400 underline cursor-pointer" : "cursor-pointer"}
+                        className={page === "home" ? "text-gray-400 cursor-pointer" : "cursor-pointer"}
                     >
                         Home
                     </li>
                     <li
-                        onClick={() => setPage("details")}
-                        className={page === "details" ? "text-gray-400 underline cursor-pointer" : "cursor-pointer"}
+                        onClick={() => {
+                            setPage('details');
+                            navigate('/user-details');
+                        }}
+                        className={page === "details" ? "text-gray-400 cursor-pointer" : "cursor-pointer"}
                     >
                         Details
                     </li>
@@ -31,7 +34,7 @@ const NavBar = () => {
                           setPage('generate'); 
                           navigate('/template-selection');
                         }}
-                        className={page === "generate" ? "text-gray-400 underline cursor-pointer" : "cursor-pointer"}
+                        className={page === "generate" ? "text-gray-400 cursor-pointer" : "cursor-pointer"}
                     >
                         Generate
                     </li>
