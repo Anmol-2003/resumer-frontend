@@ -1,17 +1,21 @@
 import React, { useEffect } from 'react'
 import { useNavigate } from 'react-router-dom'
 import assets from '../../assets/assets'
-import { useDispatch } from 'react-redux'
+import { useDispatch, useSelector } from 'react-redux'
 import { updateUserId } from '../../store-slices/user-details/user-details'
+import { updateNavPage } from '../../store-slices/navigation/nav-page'
 
 
 const Home = () => {
   const navigate = useNavigate();
   const dispatch = useDispatch();
-
+  const userId = useSelector(state => state.user.userId);
   // Authenticate access_token
   useEffect( ()=>{
-    const access_token = sessionStorage.getItem('access_token');
+    // Preventing a request to the server when session already has userId stored
+    if(userId) return; 
+
+    const access_token = localStorage.getItem('access_token');
     const fetchUserData = async () => {
       try{
         const response = await fetch(
@@ -26,14 +30,14 @@ const Home = () => {
         if(response.ok){
           const responseBody = await response.json(); // response is a promise type object
           if(responseBody.status_code === 500){
-            console.log('Token has expired.'); 
+            // console.log('Token has expired.'); 
             navigate('/login')
           }
           // storing the userId data in the global state
           dispatch(updateUserId(responseBody.data));
-          console.log('successfully authenticated token')
+          console.log('Token Authenticated')
         }else {
-          console.log('Some error occured');
+          console.log('Authentication Error');
           // navigate('/login');
         }
       } catch (error) {
@@ -55,7 +59,15 @@ const Home = () => {
         <p className='ml-10 mt-2 text-[18px]'><span className='text-[24px] font-bold'>83%</span> of recruiters say they're more likely to hire a candidate who has a well-formatted resume. </p>
         <p className='ml-10 mt-2 text-[18px]'><span className='text-[24px] font-bold'>60%</span> of hiring managers say they've found a typo on a resume. </p>
         <div className='flex justify-center mt-20'>  {/* Added flex and justify-center */}
-          <button className='h-[40px] w-[300px] bg-[#5f27c7] text-white rounded-3xl hover:shadow-lg font-bold text-[18px]' onClick={()=>navigate('/login')}>Get Started</button>
+          <button className='h-[40px] w-[300px] bg-[#5f27c7] text-white rounded-3xl hover:shadow-lg font-bold text-[18px]' onClick={()=>{
+            if(!userId){
+              navigate('/login');
+            } 
+            else{
+              dispatch(updateNavPage('generate'));
+              navigate('/template-selection');
+            }
+          }}>Get Started</button>
         </div>
         </div>   
       </div>

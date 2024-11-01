@@ -1,5 +1,5 @@
-import React, { useEffect, useState } from 'react'
-import { UNSAFE_FetchersContext, useParams } from 'react-router-dom'
+import React, { useState } from 'react'
+import { useParams } from 'react-router-dom'
 import axios from 'axios';
 import { useSelector } from 'react-redux';
 
@@ -9,7 +9,7 @@ const Dashboard = () => {
   const [isLoading, setIsLoading] = useState(false);
   const [job_description, setJobDescription] = useState("");
   const [pdfBlobUrl, setPdfBlobUrl] = useState(null);
-  const userId = useSelector(state => state.userId);
+  const userId = useSelector(state => state.user.userId);
 
   // USING AXIOS 
   const generateResume = async () => {
@@ -26,23 +26,18 @@ const Dashboard = () => {
 
     try {
         // Axios request with responseType set to 'blob' to handle the binary file
-        const response = await axios.post('http://127.0.0.1:3000/generateResume', data, {
+        const response = await axios.post(`http://127.0.0.1:3000/generateResume/${template}`, data, {
             responseType: 'blob',  // Important: Set responseType to blob
             headers: {
                 'Content-Type': 'application/json',
             }
         });
-
-        if (response.status === 200) {
-            const blob = new Blob([response.data], { type: 'application/pdf' });
-            const url = window.URL.createObjectURL(blob); // This returns a string URL of the object/blob passed as parameter. Lifetime is same as of the window
-            setPdfBlobUrl(url);
-            
-        } else {
-            console.error('Error: Unable to generate resume.');
-        }
+        const blob = new Blob([response.data], { type: 'application/pdf' });
+        const url = window.URL.createObjectURL(blob); // This returns a string URL of the object/blob passed as parameter. Lifetime is same as of the window
+        setPdfBlobUrl(url);
+        console.log(`PDF url - ${url}`);
     } catch (error) {
-        alert('Error: ' + error.message);
+        console.log(`${error} occured`);
     } finally {
         setIsLoading(false);
     }
@@ -55,7 +50,7 @@ const Dashboard = () => {
 
   return (
     <div className='flex gap-5 p-10 m-0 bg-customGrey'>
-      {/* Left side */}
+      {/* Left Side - Job Description */}
       <div className='flex-column gap-5 h-screen w-1/2 bg-white rounded-xl'>
         <div><p className='text-center p-5 text-[24px] font-bold font-kanit'>Job Description</p></div>
         <div className='flex-grow flex flex-col p-4'>
@@ -74,7 +69,7 @@ const Dashboard = () => {
         </div>
       </div>
 
-      {/* Right side */}
+      {/* Right side - Display area*/}
       <div className='flex-column gap-5 h-screen w-1/2 bg-white rounded-xl'>
         {isLoading ? (
           <div className='flex justify-center items-center h-full'>

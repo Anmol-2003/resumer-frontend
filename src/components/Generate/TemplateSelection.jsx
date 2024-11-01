@@ -5,8 +5,8 @@ import { useSelector } from 'react-redux'
 
 const TemplateSelection = () => {
     const navigate = useNavigate();
-    const userId = useSelector(state => state.userId); 
-    console.log(userId)
+    const userId = useSelector(state => state.user.userId); 
+    
   return userId ? (
     <div className='h-screen'>
         <p className='text-[24px] py-5 text-center'>Choose a template of your choice</p>

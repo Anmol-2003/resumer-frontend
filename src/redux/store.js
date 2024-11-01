@@ -8,8 +8,9 @@
 //     reducer : userReducer
 // })
 
-import { configureStore } from '@reduxjs/toolkit';
+import { configureStore, combineReducers } from '@reduxjs/toolkit';
 import userReducer from '../store-slices/user-details/user-details'; // Default export
+import navPageReducer from '../store-slices/navigation/nav-page';
 import { persistStore, persistReducer } from 'redux-persist';
 import storage from 'redux-persist/lib/storage/session'; // persisting in sessionStorage
 
@@ -19,8 +20,14 @@ const persistConfig = {
     storage,
 };
 
+// Combining reducers from multiple slices
+const rootReducer = combineReducers({
+    user : userReducer, 
+    navPage : navPageReducer
+})
+
 // Wrap your reducer with persistReducer
-const persistedReducer = persistReducer(persistConfig, userReducer);
+const persistedReducer = persistReducer(persistConfig, rootReducer);
 
 export const store = configureStore({
     reducer: persistedReducer,

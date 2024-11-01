@@ -1,9 +1,14 @@
-import React, { useState } from 'react';
+import React from 'react';
+import { useDispatch, useSelector } from 'react-redux';
 import { useNavigate } from 'react-router-dom';
+import { updateNavPage } from '../../store-slices/navigation/nav-page';
 
 const NavBar = () => {
-    const [page, setPage] = useState("home");
+    const page = useSelector(state => state.navPage.page); 
+
+    const dispatch = useDispatch(); 
     const navigate = useNavigate();
+
     return (
         <div className="px-[50px] py-[40px] flex justify-between items-center h-[30px] bg-[#5f27c7]">
             <div className="flex gap-y-5px items-center">
@@ -13,7 +18,7 @@ const NavBar = () => {
                 <ul className="flex list-none gap-[50px] text-white text-[22px] font-kanit">
                     <li
                         onClick={() => {
-                            setPage('home'); 
+                            dispatch(updateNavPage('home'));
                             navigate('/')
                         }}
                         className={page === "home" ? "text-gray-400 cursor-pointer" : "cursor-pointer"}
@@ -22,17 +27,17 @@ const NavBar = () => {
                     </li>
                     <li
                         onClick={() => {
-                            setPage('details');
+                            dispatch(updateNavPage('details'));
                             navigate('/user-details');
                         }}
                         className={page === "details" ? "text-gray-400 cursor-pointer" : "cursor-pointer"}
                     >
-                        Details
+                        Profile
                     </li>
                     <li
                         onClick={() => {
-                          setPage('generate'); 
-                          navigate('/template-selection');
+                            dispatch(updateNavPage('generate'));
+                            navigate('/template-selection');
                         }}
                         className={page === "generate" ? "text-gray-400 cursor-pointer" : "cursor-pointer"}
                     >

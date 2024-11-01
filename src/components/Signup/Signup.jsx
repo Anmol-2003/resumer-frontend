@@ -3,6 +3,7 @@ import { useNavigate } from 'react-router-dom';
 import assets from '../../assets/assets';
 import { useDispatch } from 'react-redux';
 import { updateUserId } from '../../store-slices/user-details/user-details';
+import { updateNavPage } from '../../store-slices/navigation/nav-page';
 
 
 const Signup = () => {
@@ -36,7 +37,8 @@ const Signup = () => {
 
       if (response.ok) {
         dispatch(updateUserId(responseBody.data));
-        sessionStorage.setItem('access_token', responseBody.token);
+        localStorage.setItem('access_token', responseBody.token);
+        dispatch(updateNavPage('generate'));
         navigate('/template-selection');
         // console.log(responseBody);
         // alert('Sign up successful');
