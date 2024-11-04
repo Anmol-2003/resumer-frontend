@@ -26,7 +26,7 @@ const Signup = () => {
     };
 
     try {
-      const response = await fetch('http://127.0.0.1:3000/auth/signup', {
+      const response = await fetch('http://34.71.5.19:3000/auth/signup', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
@@ -36,10 +36,10 @@ const Signup = () => {
       let responseBody = await response.json();
 
       if (response.ok) {
-        dispatch(updateUserId(responseBody.data));
+        dispatch(updateUserId(responseBody.data)); // save the userId in the current session 
         localStorage.setItem('access_token', responseBody.token);
-        dispatch(updateNavPage('generate'));
-        navigate('/template-selection');
+
+        navigate('/profile-details');
         // console.log(responseBody);
         // alert('Sign up successful');
       } else {

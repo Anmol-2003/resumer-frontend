@@ -10,7 +10,7 @@ const EditCard = ({content, item, onClose}) => {
     // APIs for saving or deleting the information
     const handleSave = async (itemId) => {
         try {  
-            const response = await fetch(`http://127.0.0.1:3000/updateDetails/${content}/${itemId}`, {
+            const response = await fetch(`http://34.71.5.19:3000/updateDetails/${content}/${itemId}`, {
                 headers : {'Content-Type' : 'application/json'}, 
                 method : 'POST', 
                 body : JSON.stringify({...formData, userId : userId})
@@ -18,35 +18,41 @@ const EditCard = ({content, item, onClose}) => {
             if(response.ok){
                 const responseBody = await response.json();
                 if(responseBody.status_code === 200) {
-                    console.log('details updated'); 
+                    alert('details updated'); 
+                    onClose(true); 
                 }
                 else {
                     console.log(`${responseBody.status_code} - error occured`);
+                    onClose(false);
                 }
-                onClose(); // Invoking the callable passed to this component
             } else {
                 alert('Some error occured');
+                onClose(false); 
             }
         } catch (error) {
             console.log(error);
+            onClose(false);
         }    
     }
 
     const handleDelete = async (id) =>{
-        const response = await fetch(`http://127.0.0.1:3000/deleteDetails/${content}/${id}`, {
+        const response = await fetch(`http://34.71.5.19:3000/deleteDetails/${content}/${id}`, {
             method : 'DELETE', 
             headers: {'Content-Type' : 'application/json'}
         }); 
         if(response.ok){
             const responseBody = await response.json();
             if(responseBody.status_code === 200){
-                console.log('Detail deleted'); 
+                alert('Detail deleted'); 
+                onClose(true); 
             }else{
                 console.log(`${responseBody.status_code} - Error occured`);
+                onClose(false); 
             }
-            onClose();
+            
         }else {
             console.log('Error occured in deleting the data');
+            onClose(false); 
         }
     }
 
@@ -323,7 +329,7 @@ const EditCard = ({content, item, onClose}) => {
                 const itemId = content === 'experience' ? item.expId : content === 'projects' ? item.projectId : content === 'education' ? item.eduId : content === 'profile' ? item.userId : item.skillsId;
                 await handleSave(itemId);
             }}>Save</button>
-            <button className='rounded-3xl border-[#5f27c7] border-[1px] px-10 text-[#5f27c7] cursor-pointer' onClick={onClose}>Cancel</button>
+            <button className='rounded-3xl border-[#5f27c7] border-[1px] px-10 text-[#5f27c7] cursor-pointer' onClick={()=>{onClose(false)}}>Cancel</button>
             <button className='rounded-3xl border-[#5f27c7] border-[1px] px-10 text-[#5f27c7] cursor-pointer' onClick={async () => {
                 try {
                     const itemId = content === 'experience' ? item.expId : content === 'projects' ? item.projectId : content === 'education' ? item.eduId : content === 'profile' ? item.userId : null;

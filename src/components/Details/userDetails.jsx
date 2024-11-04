@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react'
 import { useSelector } from 'react-redux';
 import assets from '../../assets/assets';
-import EditCard from './EditCard';
+import EditCard from './EditDetailsCard';
 import AddDetailsCard from './AddDetailsCard';
 
 // Design needs to be updated. 
@@ -32,7 +32,7 @@ const UserDetails = () => {
         // userId is used here to pass it into the parameter of the url for fettching data.
         try {
             console.log(`User ID - ${userId}`);
-            const response = await fetch(`http://127.0.0.1:3000/fetchUserDetails/${userId}`, {
+            const response = await fetch(`http://34.71.5.19:3000/fetchUserDetails/${userId}`, {
                 method : ['GET'], 
             }); 
     
@@ -239,7 +239,13 @@ const UserDetails = () => {
                                                     </div>
                                                 ))
                                                 ) : (
-                                                <p className='text-[20px] text-center'>No data available.</p>
+                                                <div>
+                                                    <button 
+                                                    onClick={handleAddDetails}
+                                                    className='border-[1px] px-12 rounded-3xl text-[#5f27c7] border-[#5f27c7] cursor-pointer hover:bg-gray-100 font-bold'>
+                                                    Add Skills
+                                                    </button>
+                                                </div>
                                                 )}
                                         </div>
                                         </>
@@ -255,12 +261,22 @@ const UserDetails = () => {
                 </div>
                 {isEditModalOpen && (
                 <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
-                    <EditCard content={modalContent.content} item={modalContent.item} onClose = {()=>setisEditModalOpen(false)}/>
+                    <EditCard content={modalContent.content} item={modalContent.item} onClose = {(changed)=>{
+                        setisEditModalOpen(false);
+                        if(changed){
+                            fetchUserDetails();
+                        }
+                    }}/>
                 </div>
                 )}
                 {isAddModalOpen && (
                 <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
-                    <AddDetailsCard content={content} onClose={()=>setisAddModalOpen(false)}/>
+                    <AddDetailsCard content={content} onClose={(added)=>{
+                        setisAddModalOpen(false); 
+                        if(added){
+                            fetchUserDetails();
+                        }
+                    }}/>
                 </div>
                 )}
             </div>

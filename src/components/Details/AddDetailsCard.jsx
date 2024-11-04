@@ -31,7 +31,7 @@ const AddDetailsCard = ({content, onClose}) => {
             console.log('Please fill all the details'); 
             return; 
         }
-        const url = "http://127.0.0.1:3000" + 
+        const url = "http://34.71.5.19:3000" + 
             (content === 'experience' ? "/saveExperience" : 
             content === 'projects' ? "/saveProject" : 
             "/saveEducation");
@@ -43,15 +43,15 @@ const AddDetailsCard = ({content, onClose}) => {
         if(response.ok){
             const responseBody = await response.json(); 
             if(responseBody.status_code === 200){
-                console.log('Data saved'); 
-                onClose();
+                alert('Data saved'); 
+                onClose(true);
             } else {
                 console.log(`${responseBody.status_code} Error occured`);
-                onClose();
+                onClose(false);
             }
         }else {
             console.log('Bad response');
-            onClose();
+            onClose(false);
         }
     };
 
@@ -192,7 +192,9 @@ const AddDetailsCard = ({content, onClose}) => {
                 Save
             </button>
             <button 
-            onClick={onClose}
+            onClick={()=>{
+                onClose(false); 
+            }}
             className='rounded-3xl border-[#5f27c7] border-[1px] px-10 text-[#5f27c7] cursor-pointer w-[200px]'>
                 Cancel
             </button>
