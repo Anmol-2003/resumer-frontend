@@ -26,7 +26,7 @@ const Signup = () => {
     };
 
     try {
-      const response = await fetch('http://34.71.5.19:3000/auth/signup', {
+      const response = await fetch('http://34.46.197.121:3000/auth/signup', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',

@@ -10,7 +10,7 @@ const EditCard = ({content, item, onClose}) => {
     // APIs for saving or deleting the information
     const handleSave = async (itemId) => {
         try {  
-            const response = await fetch(`http://34.71.5.19:3000/updateDetails/${content}/${itemId}`, {
+            const response = await fetch(`http://34.46.197.121:3000/updateDetails/${content}/${itemId}`, {
                 headers : {'Content-Type' : 'application/json'}, 
                 method : 'POST', 
                 body : JSON.stringify({...formData, userId : userId})

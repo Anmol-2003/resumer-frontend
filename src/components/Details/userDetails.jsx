@@ -32,7 +32,7 @@ const UserDetails = () => {
         // userId is used here to pass it into the parameter of the url for fettching data.
         try {
             console.log(`User ID - ${userId}`);
-            const response = await fetch(`http://34.71.5.19:3000/fetchUserDetails/${userId}`, {
+            const response = await fetch(`http://34.46.197.121:3000/fetchUserDetails/${userId}`, {
                 method : ['GET'], 
             }); 
     

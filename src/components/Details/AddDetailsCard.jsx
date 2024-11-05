@@ -2,39 +2,42 @@ import React, { useEffect, useState } from 'react'
 import { useSelector } from 'react-redux'
 
 const AddDetailsCard = ({content, onClose}) => {
-    const userId = useSelector(state => state.userId);
+    const userId = useSelector(state => state.user.userId);
 
     const initialFormData = () => {
         if (content === 'experience') {
-            return { userId, title: "", employer: "", duration: "", description: "" };
+            return { userId : userId, title: "", employer: "", duration: "", description: "" };
         } else if (content === 'projects') {
-            return { userId, title: "", description: "", techStack: "" };
+            return { userId : userId , title: "", description: "", techStack: "" };
         } else if (content === 'education') {
-            return { userId, institution: "", location: "", duration: "", grade: "" };
-        } else {
-            return {};
-        }
+            return { userId : userId, institution: "", location: "", duration: "", grade: "" };
+        } else if(content ==='skills'){
+            return {userId : userId , languages : "", frameworks : "", courses : "", certifications : ""};
+        } else return {};
     };
 
-    const [formData, setFormData] = useState(initialFormData);
+    const [formData, setFormData] = useState(initialFormData());
 
     useEffect(() => {
         setFormData(initialFormData());
-    }, [content]);
+    }, [content]); // Only depends on the content type to be inserted to the database.
 
     const handleSave = async () => {
-        const isFormIncomplete = Object.values(formData).some(value => 
-            typeof value === "string" ? value.trim() === "" : value === ""
-        );
-
-        if(isFormIncomplete){
+        let isFormIncomplete = false; 
+        if(content != 'skills'){
+            isFormIncomplete = Object.values(formData).some(value => 
+                typeof value === "string" ? value.trim() === "" : value === ""
+            );
+        }
+        if(isFormIncomplete && content != 'skills'){
             console.log('Please fill all the details'); 
             return; 
         }
-        const url = "http://34.71.5.19:3000" + 
+        const url = "http://34.46.197.121:3000" + 
             (content === 'experience' ? "/saveExperience" : 
             content === 'projects' ? "/saveProject" : 
-            "/saveEducation");
+            content === 'skills' ? '/saveSkills': '/saveEducation');
+
         const response = await fetch(url, {
             headers : {'Content-Type' : 'application/json'}, 
             body : JSON.stringify(formData),
@@ -183,19 +186,65 @@ const AddDetailsCard = ({content, onClose}) => {
                 </div>
                 </>
             )}
+            {
+                content === 'skills' && (
+                    <>
+                    <div className='mb-5'>
+                    <label htmlFor="">Languages : 
+                        <input 
+                        type='text' 
+                        value={formData.languages}
+                        onChange={e => setFormData(prev => ({...prev, languages : e.target.value}))}
+                        className='w-full border rounded px-2 py-1'>
+                        </input>
+                    </label>
+                    </div>
+                    <div className='mb-5'>
+                    <label htmlFor="">Frameworks : 
+                        <input 
+                        type='text' 
+                        value={formData.frameworks}
+                        onChange={e => setFormData(prev => ({...prev, frameworks : e.target.value}))}
+                        className='w-full border rounded px-2 py-1'>
+                        </input>
+                    </label>
+                    </div>
+                    <div className='mb-5'>
+                    <label htmlFor="">Courses : 
+                        <input 
+                        type='text' 
+                        value={formData.courses}
+                        onChange={e => setFormData(prev => ({...prev, courses : e.target.value}))}
+                        className='w-full border rounded px-2 py-1'>
+                        </input>
+                    </label>
+                    </div>
+                    <div className='mb-5'>
+                    <label htmlFor="">Certifcations : 
+                        <input 
+                        type='text' 
+                        value={formData.certifications}
+                        onChange={e => setFormData(prev => ({...prev, certifications : e.target.value}))}
+                        className='w-full border rounded px-2 py-1'>
+                        </input>
+                    </label>
+                    </div>
+                    </>
+                )
+            }
         </div>
         {/* Buttons for saving and cancel */}
         <div className='px-10 py-5 flex justify-between'>
             <button 
             onClick={handleSave}
-            className='rounded-3xl bg-[#5f27c7] text-white font-bold px-10 w-[200px] cursor-pointer'>
+            className='h-[40px] rounded-3xl bg-[#5f27c7] text-white font-bold px-10 w-[200px] cursor-pointer'>
                 Save
             </button>
             <button 
             onClick={()=>{
                 onClose(false); 
             }}
-            className='rounded-3xl border-[#5f27c7] border-[1px] px-10 text-[#5f27c7] cursor-pointer w-[200px]'>
+            className=' h-[40px] rounded-3xl border-[#5f27c7] border-[1px] px-10 text-[#5f27c7] cursor-pointer w-[200px]'>
                 Cancel
             </button>
 
