@@ -8,6 +8,7 @@ import { updateNavPage } from '../../store-slices/navigation/nav-page';
 
 const Signup = () => {
   
+  const publicIp = import.meta.env.VITE_SERVER_IP;
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [username, setUsername] = useState('');
@@ -26,7 +27,7 @@ const Signup = () => {
     };
 
     try {
-      const response = await fetch('http://34.46.197.121:3000/auth/signup', {
+      const response = await fetch(`${publicIp}/auth/signup`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',

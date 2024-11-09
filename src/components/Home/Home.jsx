@@ -7,6 +7,7 @@ import { updateNavPage } from '../../store-slices/navigation/nav-page'
 
 
 const Home = () => {
+  const publicIp = import.meta.env.VITE_SERVER_IP;
   const navigate = useNavigate();
   const dispatch = useDispatch();
   const userId = useSelector(state => state.user.userId);
@@ -19,7 +20,7 @@ const Home = () => {
     const fetchUserData = async () => {
       try{
         const response = await fetch(
-          'http://34.46.197.121:3000/auth/me', {
+          `${publicIp}/auth/me`, {
             method : ['GET'], 
             headers : {
               'Authorization' : `Bearer ${access_token}`, 
