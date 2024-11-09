@@ -3,7 +3,7 @@ import { useSelector } from 'react-redux'
 
 const AddDetailsCard = ({content, onClose}) => {
     const userId = useSelector(state => state.user.userId);
-
+    const publicIp = import.meta.env.VITE_SERVER_IP;
     const initialFormData = () => {
         if (content === 'experience') {
             return { userId : userId, title: "", employer: "", duration: "", description: "" };
@@ -33,7 +33,7 @@ const AddDetailsCard = ({content, onClose}) => {
             console.log('Please fill all the details'); 
             return; 
         }
-        const url = "http://34.46.197.121:3000" + 
+        const url = `${publicIp}` + 
             (content === 'experience' ? "/saveExperience" : 
             content === 'projects' ? "/saveProject" : 
             content === 'skills' ? '/saveSkills': '/saveEducation');
