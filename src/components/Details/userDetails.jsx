@@ -9,6 +9,7 @@ import AddDetailsCard from './AddDetailsCard';
 
 
 const UserDetails = () => {
+    const publicIp = import.meta.env.VITE_SERVER_IP;
     const [content, setContent] = useState('');
     const [details, setDetails] = useState({}); 
     const [loading, setLoading] = useState(true);
@@ -32,7 +33,7 @@ const UserDetails = () => {
         // userId is used here to pass it into the parameter of the url for fettching data.
         try {
             console.log(`User ID - ${userId}`);
-            const response = await fetch(`http://34.46.197.121:3000/fetchUserDetails/${userId}`, {
+            const response = await fetch(`${publicIp}/fetchUserDetails/${userId}`, {
                 method : ['GET'], 
             }); 
     

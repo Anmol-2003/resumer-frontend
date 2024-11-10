@@ -3,6 +3,7 @@ import { useSelector } from 'react-redux';
 import { useNavigate } from 'react-router-dom';
 
 const ProfileDetails = () => {
+    const publicIp = import.meta.env.VITE_SERVER_IP;
     const navigate = useNavigate();
     const [profileDetails, setProfileDetails] = useState({
         firstName : "", 
@@ -14,7 +15,7 @@ const ProfileDetails = () => {
     const userId = useSelector(state => state.user.userId); 
     console.log(userId);
     const profileDetailsHandler = async () => {
-        const response = await fetch(`http://34.46.197.121:3000/saveUserProfile/${userId}`, {
+        const response = await fetch(`${publicIp}/saveUserProfile/${userId}`, {
             method : 'POST', 
             body : JSON.stringify(profileDetails), 
             headers : {'Content-Type' : 'application/json'}

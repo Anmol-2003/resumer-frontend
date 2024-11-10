@@ -5,6 +5,7 @@ import { useSelector } from 'react-redux';
 
 
 const Dashboard = () => {
+  const publicIp = import.meta.env.VITE_SERVER_IP;
   const { template } = useParams();
   const [isLoading, setIsLoading] = useState(false);
   const [job_description, setJobDescription] = useState("");
@@ -26,7 +27,7 @@ const Dashboard = () => {
 
     try {
         // Axios request with responseType set to 'blob' to handle the binary file
-        const response = await axios.post(`http://34.46.197.121:3000/generateResume/${template}`, data, {
+        const response = await axios.post(`${publicIp}/generateResume/${template}`, data, {
             responseType: 'blob',  // Important: Set responseType to blob
             headers: {
                 'Content-Type': 'application/json',

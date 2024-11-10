@@ -2,7 +2,7 @@ import React, { useEffect, useState } from 'react'
 import { useSelector } from 'react-redux';
 
 const EditCard = ({content, item, onClose}) => {
-
+    const publicIp = import.meta.env.VITE_SERVER_IP;
     const [formData, setFormData] = useState({...item}); // shallow copy of the item
     const [isChanged, setIsChanged] = useState(false); // initially its not changed
     const userId = useSelector(state => state.userId);
@@ -10,7 +10,7 @@ const EditCard = ({content, item, onClose}) => {
     // APIs for saving or deleting the information
     const handleSave = async (itemId) => {
         try {  
-            const response = await fetch(`http://34.46.197.121:3000/updateDetails/${content}/${itemId}`, {
+            const response = await fetch(`${publicIp}/updateDetails/${content}/${itemId}`, {
                 headers : {'Content-Type' : 'application/json'}, 
                 method : 'POST', 
                 body : JSON.stringify({...formData, userId : userId})
@@ -36,7 +36,7 @@ const EditCard = ({content, item, onClose}) => {
     }
 
     const handleDelete = async (id) =>{
-        const response = await fetch(`http://34.71.5.19:3000/deleteDetails/${content}/${id}`, {
+        const response = await fetch(`${publicIp}/deleteDetails/${content}/${id}`, {
             method : 'DELETE', 
             headers: {'Content-Type' : 'application/json'}
         }); 

@@ -6,6 +6,7 @@ import { updateUserId } from '../../store-slices/user-details/user-details';
 import { updateNavPage } from '../../store-slices/navigation/nav-page';
 
 const Login = () => {
+    const publicIp = import.meta.env.VITE_SERVER_IP;
     const [email, setEmail] = useState('');
     const [password, setPassword] = useState('');
     const navigate = useNavigate();
@@ -18,7 +19,7 @@ const Login = () => {
         }
         const data = { email, password };
         try {
-            const response = await fetch('http://34.71.5.19:3000/auth/login', {
+            const response = await fetch(`${publicIp}/auth/login`, {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json',
