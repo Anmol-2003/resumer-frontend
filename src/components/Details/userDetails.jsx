@@ -37,7 +37,7 @@ const UserDetails = () => {
                 method : ['GET'], 
             }); 
     
-            if(response.ok){
+            if(response.status === 200){
                 const responseBody = await response.json(); 
                 if(responseBody.data === undefined){
                     console.log('Data returned is empty.')

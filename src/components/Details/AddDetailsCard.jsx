@@ -4,6 +4,7 @@ import { useSelector } from 'react-redux'
 const AddDetailsCard = ({content, onClose}) => {
     const userId = useSelector(state => state.user.userId);
     const publicIp = import.meta.env.VITE_SERVER_IP;
+
     const initialFormData = () => {
         if (content === 'experience') {
             return { userId : userId, title: "", employer: "", duration: "", description: "" };
@@ -45,11 +46,11 @@ const AddDetailsCard = ({content, onClose}) => {
         });
         if(response.ok){
             const responseBody = await response.json(); 
-            if(responseBody.status_code === 200){
+            if(response.status === 200){
                 alert('Data saved'); 
                 onClose(true);
             } else {
-                console.log(`${responseBody.status_code} Error occured`);
+                console.log(`${response.status} Error occured`);
                 onClose(false);
             }
         }else {

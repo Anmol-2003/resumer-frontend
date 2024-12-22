@@ -7,7 +7,7 @@ import { updateNavPage } from '../../store-slices/navigation/nav-page';
 
 
 const Signup = () => {
-  
+
   const publicIp = import.meta.env.VITE_SERVER_IP;
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
@@ -17,8 +17,13 @@ const Signup = () => {
 
   const signupHandler = async () => {
     if (!username || !email || !password) {
-      alert('Please enter your details properly');
+      alert('Please enter your details');
       return;
+    }
+    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+    if (!emailRegex.test(email)) {
+        alert('Please enter a valid email address');
+        return;
     }
     const data = {
       'name':username,
@@ -36,15 +41,13 @@ const Signup = () => {
       });
       let responseBody = await response.json();
 
-      if (response.ok) {
+      if (response.status === 200) {
         dispatch(updateUserId(responseBody.data)); // save the userId in the current session 
         localStorage.setItem('access_token', responseBody.token);
-
         navigate('/profile-details');
-        // console.log(responseBody);
-        // alert('Sign up successful');
+
       } else {
-        console.log(responseBody);
+        console.log('Error during sign up')
       }
     } catch (error) {
       alert(error);

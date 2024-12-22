@@ -17,8 +17,7 @@ const EditCard = ({content, item, onClose}) => {
             });
             if(response.ok){
                 const responseBody = await response.json();
-                if(responseBody.status_code === 200) {
-                    alert('details updated'); 
+                if(response.status === 200) {
                     onClose(true); 
                 }
                 else {
@@ -26,7 +25,7 @@ const EditCard = ({content, item, onClose}) => {
                     onClose(false);
                 }
             } else {
-                alert('Some error occured');
+                alert('Error Occured');
                 onClose(false); 
             }
         } catch (error) {

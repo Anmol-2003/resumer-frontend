@@ -30,6 +30,7 @@ const Home = () => {
         ); 
         if(response.ok){
           const responseBody = await response.json(); // response is a promise type object
+          console.log(responseBody);
           if(responseBody.status_code === 500){
             // console.log('Token has expired.'); 
             navigate('/login')
@@ -38,8 +39,8 @@ const Home = () => {
           dispatch(updateUserId(responseBody.data));
           console.log('Token Authenticated')
         }else {
-          console.log('Authentication Error');
-          // navigate('/login');
+          console.log('Authentication Error - Not enough segments');
+          navigate('/login');
         }
       } catch (error) {
         console.log(error);

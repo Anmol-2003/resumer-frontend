@@ -1,10 +1,15 @@
 import React, { useState } from 'react'
 import { useSelector } from 'react-redux';
 import { useNavigate } from 'react-router-dom';
+import { updateNavPage } from '../../store-slices/navigation/nav-page';
+import { useDispatch } from 'react-redux';
+
 
 const ProfileDetails = () => {
     const publicIp = import.meta.env.VITE_SERVER_IP;
     const navigate = useNavigate();
+    const dispatch = useDispatch();
+    
     const [profileDetails, setProfileDetails] = useState({
         firstName : "", 
         lastName : "", 
@@ -21,12 +26,12 @@ const ProfileDetails = () => {
             headers : {'Content-Type' : 'application/json'}
         }); 
         if(response.ok){
-            const responseBody = await response.json(); 
-            if(responseBody.status_code == 200){
+            if(response.status == 200){
                 console.log('User Registered Successfully');
-                navigate('/template-selection');
+                dispatch(updateNavPage('home'));
+                navigate('/');
             }else{
-                console.log(`${responseBody.status_code} response code`);
+                console.log(`${response.status} response code error`);
             }
         }else{
             console.log('Bad response');

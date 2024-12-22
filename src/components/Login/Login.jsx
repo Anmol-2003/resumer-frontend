@@ -17,6 +17,11 @@ const Login = () => {
             alert('Please enter your details');
             return;
         }
+        const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+        if (!emailRegex.test(email)) {
+            alert('Please enter a valid email address');
+            return;
+        }
         const data = { email, password };
         try {
             const response = await fetch(`${publicIp}/auth/login`, {
@@ -27,12 +32,11 @@ const Login = () => {
                 body: JSON.stringify(data),
             });
             const responseBody = await response.json();
-            if (response.ok) {
+            if (response.status === 200) {
                 dispatch(updateUserId(responseBody.data));
                 localStorage.setItem('access_token', responseBody.token);
-                dispatch(updateNavPage('generate'));
-                navigate('/template-selection');
-                // console.log('Successful login');
+                dispatch(updateNavPage('home'));
+                navigate('/');
             } else {
                 alert('Login unsuccessful');
             }
