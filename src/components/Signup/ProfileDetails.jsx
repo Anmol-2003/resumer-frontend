@@ -18,7 +18,6 @@ const ProfileDetails = () => {
         linkedinLink : "", 
     });
     const userId = useSelector(state => state.user.userId); 
-    console.log(userId);
     const profileDetailsHandler = async () => {
         const response = await fetch(`${publicIp}/saveUserProfile/${userId}`, {
             method : 'POST', 
@@ -27,7 +26,7 @@ const ProfileDetails = () => {
         }); 
         if(response.ok){
             if(response.status == 200){
-                console.log('User Registered Successfully');
+                // console.log('User Registered Successfully');
                 dispatch(updateNavPage('home'));
                 navigate('/');
             }else{
@@ -86,7 +85,7 @@ const ProfileDetails = () => {
                   type="text"
                   placeholder="LinkedIn Link"
                   value={profileDetails.linkinLink}
-                  onChange={(e) => setProfileDetails(prev => ({...prev, linkinLink : e.target.value}))}
+                  onChange={(e) => setProfileDetails(prev => ({...prev, linkedinLink : e.target.value}))}
                   className="w-[300px] h-[35px] rounded-lg border-[0.3px] border-black px-[10px] text-[18px]"
                 />
               </div>

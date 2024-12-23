@@ -12,12 +12,45 @@ const Home = () => {
   const dispatch = useDispatch();
   const userId = useSelector(state => state.user.userId);
   // Authenticate access_token
-  useEffect( ()=>{
-    // Preventing a request to the server when session already has userId stored
-    if(userId) return; 
+  // useEffect( ()=>{
+  //   // Preventing a request to the server when session already has userId stored
+  //   if(userId) return; 
+  //   const access_token = localStorage.getItem('access_token');
 
+  //   const fetchUserData = async () => {
+  //     try{
+  //       const response = await fetch(
+  //         `${publicIp}/auth/me`, {
+  //           method : ['GET'], 
+  //           headers : {
+  //             'Authorization' : `Bearer ${access_token}`, 
+  //             'Content-Type' : 'application/json'
+  //           }
+  //         }
+  //       ); 
+  //       if(response.ok){
+  //         const responseBody = await response.json(); // response is a promise type object
+  //         console.log(responseBody);
+  //         if(responseBody.status_code === 500){
+  //           // console.log('Token has expired.'); 
+  //           navigate('/login')
+  //         }
+  //         // storing the userId data in the global state
+  //         dispatch(updateUserId(responseBody.data));
+  //         console.log('Token Authenticated')
+  //       }else {
+  //         console.log('Authentication Error - Not enough segments');
+  //         navigate('/login');
+  //       }
+  //     } catch (error) {
+  //       console.log(error);
+  //     }
+  //   }
+    
+  //   fetchUserData();
+  // }, []);
+  const fetchUserData = async () => {
     const access_token = localStorage.getItem('access_token');
-    const fetchUserData = async () => {
       try{
         const response = await fetch(
           `${publicIp}/auth/me`, {
@@ -46,9 +79,6 @@ const Home = () => {
         console.log(error);
       }
     }
-    fetchUserData();
-  }, []);
-  
   return (
     <div className=''>
       <div className='flex gap-10 m-20'>
@@ -63,7 +93,8 @@ const Home = () => {
         <div className='flex justify-center mt-20'>  {/* Added flex and justify-center */}
           <button className='h-[40px] w-[300px] bg-[#5f27c7] text-white rounded-3xl hover:shadow-lg font-bold text-[18px]' onClick={()=>{
             if(!userId){
-              navigate('/login');
+              // navigate('/login');
+              fetchUserData();
             } 
             else{
               dispatch(updateNavPage('generate'));
