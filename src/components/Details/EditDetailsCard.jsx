@@ -1,14 +1,17 @@
 import React, { useEffect, useState } from 'react'
 import { useSelector } from 'react-redux';
+import Loader from '../Loader';
 
 const EditCard = ({content, item, onClose}) => {
     const publicIp = import.meta.env.VITE_SERVER_IP;
     const [formData, setFormData] = useState({...item}); // shallow copy of the item
     const [isChanged, setIsChanged] = useState(false); // initially its not changed
+    const [isLoading, setIsLoading] = useState(false);
     const userId = useSelector(state => state.userId);
 
     // APIs for saving or deleting the information
     const handleSave = async (itemId) => {
+        setIsLoading(true);
         try {  
             const response = await fetch(`${publicIp}/updateDetails/${content}/${itemId}`, {
                 headers : {'Content-Type' : 'application/json'}, 
@@ -21,7 +24,6 @@ const EditCard = ({content, item, onClose}) => {
                     onClose(true); 
                 }
                 else {
-                    console.log(`${responseBody.status_code} - error occured`);
                     onClose(false);
                 }
             } else {
@@ -29,12 +31,14 @@ const EditCard = ({content, item, onClose}) => {
                 onClose(false); 
             }
         } catch (error) {
-            console.log(error);
             onClose(false);
-        }    
+        }finally{
+            setIsLoading(false);
+        }
     }
 
     const handleDelete = async (id) =>{
+        setIsLoading(true);
         const response = await fetch(`${publicIp}/deleteDetails/${content}/${id}`, {
             method : 'DELETE', 
             headers: {'Content-Type' : 'application/json'}
@@ -53,6 +57,7 @@ const EditCard = ({content, item, onClose}) => {
             console.log('Error occured in deleting the data');
             onClose(false); 
         }
+        setIsLoading(false);
     }
 
     useEffect(()=>{
@@ -93,6 +98,8 @@ const EditCard = ({content, item, onClose}) => {
    return (
     <>
     <div className='editModal bg-white w-1/2 h-5/6 rounded-2xl p-5 flex flex-col'>
+        {isLoading ? <Loader /> : (
+            <>
         {/* Information that can be edited */}
         <div className='overflow-y-auto flex-grow'>
         {content === 'experience' && (
@@ -342,6 +349,8 @@ const EditCard = ({content, item, onClose}) => {
                 }
             }}>Delete</button>
         </div>
+        </>
+        )}
     </div>
     </>
   )

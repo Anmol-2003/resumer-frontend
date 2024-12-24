@@ -1,9 +1,11 @@
-import React, { useEffect, useState } from 'react'
-import { useSelector } from 'react-redux'
+import React, { useEffect, useState } from 'react';
+import { useSelector } from 'react-redux';
+import Loader from '../Loader';
 
 const AddDetailsCard = ({content, onClose}) => {
     const userId = useSelector(state => state.user.userId);
     const publicIp = import.meta.env.VITE_SERVER_IP;
+    const [isLoading, setIsLoading] = useState(false);
 
     const initialFormData = () => {
         if (content === 'experience') {
@@ -24,14 +26,15 @@ const AddDetailsCard = ({content, onClose}) => {
     }, [content]); // Only depends on the content type to be inserted to the database.
 
     const handleSave = async () => {
+        setIsLoading(true);
         let isFormIncomplete = false; 
         if(content != 'skills'){
             isFormIncomplete = Object.values(formData).some(value => 
                 typeof value === "string" ? value.trim() === "" : value === ""
             );
         }
-        if(isFormIncomplete && content != 'skills'){
-            console.log('Please fill all the details'); 
+        if(isFormIncomplete && content != 'skills'){ 
+            setIsLoading(false);
             return; 
         }
         const url = `${publicIp}` + 
@@ -47,20 +50,20 @@ const AddDetailsCard = ({content, onClose}) => {
         if(response.ok){
             const responseBody = await response.json(); 
             if(response.status === 200){
-                alert('Data saved'); 
                 onClose(true);
             } else {
-                console.log(`${response.status} Error occured`);
                 onClose(false);
             }
         }else {
-            console.log('Bad response');
             onClose(false);
         }
+        setIsLoading(false);
     };
 
   return (
     <div className='addModal bg-white w-1/2 h-5/6 rounded-2xl p-5 flex flex-col'>
+        {isLoading ? <Loader/> : (
+        <>
         {/* Adding details part */}
         <div className='overflow-y-auto flex-grow border-b-[2px]' >
             {content === 'experience' && (
@@ -250,8 +253,10 @@ const AddDetailsCard = ({content, onClose}) => {
             </button>
 
         </div>
+        </>
+        )}
     </div>
   )
 }
 
-export default AddDetailsCard
+export default AddDetailsCard;
