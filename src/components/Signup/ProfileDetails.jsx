@@ -3,6 +3,7 @@ import { useSelector } from 'react-redux';
 import { useNavigate } from 'react-router-dom';
 import { updateNavPage } from '../../store-slices/navigation/nav-page';
 import { useDispatch } from 'react-redux';
+import Loader from '../Loader';
 
 
 const ProfileDetails = () => {
@@ -17,8 +18,10 @@ const ProfileDetails = () => {
         githubLink : "", 
         linkedinLink : "", 
     });
+    const [isLoading, setIsLoading] = useState(false);
     const userId = useSelector(state => state.user.userId); 
     const profileDetailsHandler = async () => {
+        setIsLoading(true);
         const response = await fetch(`${publicIp}/saveUserProfile/${userId}`, {
             method : 'POST', 
             body : JSON.stringify(profileDetails), 
@@ -26,7 +29,6 @@ const ProfileDetails = () => {
         }); 
         if(response.ok){
             if(response.status == 200){
-                // console.log('User Registered Successfully');
                 dispatch(updateNavPage('home'));
                 navigate('/');
             }else{
@@ -35,11 +37,14 @@ const ProfileDetails = () => {
         }else{
             console.log('Bad response');
         }
+        setIsLoading(false);
     }
 
     return (
         <div className="h-screen bg-[#5f27c7] flex items-center pl-[230px]">
           <div className="flex flex-col ml-[150px] w-[500px] h-[75vh] bg-gray-300 rounded-[20px] shadow-lg">
+            { isLoading ? <Loader/> : (
+              <>
             <div className="self-center mt-8 mb-16 text-[38px] font-bold text-[#5f27c7] font-pacifico">
               Profile Details
             </div>
@@ -98,10 +103,11 @@ const ProfileDetails = () => {
                 Continue
               </button>
             </div>
+            </>
+            )}
           </div>
         </div>
-      );
-      
+      );    
 }
 
 export default ProfileDetails

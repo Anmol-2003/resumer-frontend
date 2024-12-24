@@ -4,6 +4,7 @@ import assets from '../../assets/assets';
 import { useDispatch } from 'react-redux';
 import { updateUserId } from '../../store-slices/user-details/user-details';
 import { updateNavPage } from '../../store-slices/navigation/nav-page';
+import Loader from '../Loader';
 
 
 const Signup = () => {
@@ -14,6 +15,7 @@ const Signup = () => {
   const [username, setUsername] = useState('');
   const navigate = useNavigate();
   const dispatch = useDispatch();
+  const [isLoading, setIsLoading] = useState(false);
 
   const signupHandler = async () => {
     if (!username || !email || !password) {
@@ -25,6 +27,7 @@ const Signup = () => {
         alert('Please enter a valid email address');
         return;
     }
+    setIsLoading(true);
     const data = {
       'name':username,
       'email' : email,
@@ -51,12 +54,16 @@ const Signup = () => {
       }
     } catch (error) {
       alert(error);
+    } finally {
+      setIsLoading(false);
     }
   };
 
   return (
     <div className="h-screen bg-[#5f27c7] flex items-center pl-[230px]">
       <div className="flex flex-col ml-[150px] w-[500px] h-[75vh] bg-gray-300 rounded-[20px] shadow-lg">
+        { isLoading ? <Loader/> : (
+          <>
         <div className="self-center mt-8 mb-16 text-[38px] font-bold text-[#5f27c7] font-pacifico">
           Sign Up
         </div>
@@ -106,6 +113,8 @@ const Signup = () => {
             Login
           </button>
         </div>
+        </>
+      )}
       </div>
     </div>
   );

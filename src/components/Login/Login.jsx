@@ -4,6 +4,7 @@ import assets from '../../assets/assets';
 import { useDispatch } from 'react-redux';
 import { updateUserId } from '../../store-slices/user-details/user-details';
 import { updateNavPage } from '../../store-slices/navigation/nav-page';
+import Loader from '../Loader';
 
 const Login = () => {
     const publicIp = import.meta.env.VITE_SERVER_IP;
@@ -11,6 +12,7 @@ const Login = () => {
     const [password, setPassword] = useState('');
     const navigate = useNavigate();
     const dispatch = useDispatch();
+    const [isLoading, setIsLoading] = useState(false);
 
     const loginHandler = async () => {
         if (!email || !password) {
@@ -22,6 +24,7 @@ const Login = () => {
             alert('Please enter a valid email address');
             return;
         }
+        setIsLoading(true);
         const data = { email, password };
         try {
             const response = await fetch(`${publicIp}/auth/login`, {
@@ -36,18 +39,23 @@ const Login = () => {
                 dispatch(updateUserId(responseBody.data));
                 localStorage.setItem('access_token', responseBody.token);
                 dispatch(updateNavPage('home'));
-                navigate('/');
+                navigate('/user-details');
             } else {
-                alert('Login unsuccessful');
+                navigate('/');
+                alert('Login unsuccessful, please try again');
             }
         } catch (error) {
             console.error('Error', error);
+        } finally{
+            setIsLoading(false);
         }
     };
 
     return (
         <div className="h-screen bg-[#5f27c7] flex items-center pl-[230px]">
             <div className="flex flex-col ml-[150px] w-[500px] h-[70vh] bg-gray-300 rounded-[20px] shadow-lg">
+                { isLoading ? <Loader /> : (
+                    <>
                 <div className="self-center mt-8 mb-16 text-[38px] font-bold text-[#5f27c7] font-pacifico">
                     Login
                 </div>
@@ -86,7 +94,10 @@ const Login = () => {
                     >
                         Sign up
                     </button>
+                    
                 </div>
+                </>
+            )}
             </div>
         </div>
     );
